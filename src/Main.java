@@ -24,7 +24,7 @@ public class Main {
 
             switch (option) {
                 case 1:
-                    hangmanGame.start();
+                    hangmanGame.play();
                     break;
                 case 0:
                     hangmanGame.exit();
