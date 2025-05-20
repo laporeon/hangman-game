@@ -12,11 +12,12 @@ public class HangmanGame {
 
     private String[] words = {"HTML", "CSS", "JAVASCRIPT", "JAVA", "PYTHON", "RUST", "REACT",
             "NODE", "TYPESCRIPT", "SQL", "POSTGRESQL", "MYSQL", "MONGODB", "NOSQL", "DOCKER",
-            "REDIS"};
+            "REDIS", "SERVER", "SOFTWARE", "HARDWARE", "SPRING BOOT", "REACT NATIVE", "GITHUB",
+            "GITLAB", "PHP", "GO", "SWIFT", "KOTLIN", "WINDOWS", "UBUNTU", "FEDORA", "DEBIAN",
+            "TERMINAL"};
     private final int totalChances = 5;
     private int remainingChances = 5;
     private boolean restart = true;
-    private final List<String> incorrectLetters = new ArrayList<String>();
     private final List<String> correctLetters = new ArrayList<String>();
     private final List<String> attemptedLetters = new ArrayList<String>();
 
@@ -44,12 +45,14 @@ public class HangmanGame {
             String letter = scanner.nextLine().toUpperCase().trim();
 
             if (!isValidLetter(letter)) {
-                System.out.println("Please, enter a single valid letter.");
+                System.out.printf("%sERROR: Please, enter a single valid letter.%s\n", Colors.RED,
+                        Colors.RESET);
                 continue;
             }
 
             if (isLetterAlreadyUsed(letter)) {
-                System.out.println("You already tried this letter.");
+                System.out.printf("%sERROR: You already tried this letter.%s\n", Colors.RED,
+                        Colors.RESET);
                 continue;
             }
 
@@ -74,7 +77,6 @@ public class HangmanGame {
             correctLetters.add(letter);
             System.out.println("Correct!");
         } else {
-            incorrectLetters.add(letter);
             remainingChances--;
             System.out.printf("%sIncorrect! You have %d chance(s) left.%s\n",
                     Colors.RED, remainingChances, Colors.RESET);
@@ -83,11 +85,15 @@ public class HangmanGame {
 
     private void updateWordState(String word) {
         for (String letter : word.split("")) {
-            if (correctLetters.contains(letter)) {
+            if (letter.equals(" ")) {
+                System.out.print("  ");
+            } else if (correctLetters.contains(letter)){
                 System.out.print(letter + " ");
             } else {
                 System.out.print("_ ");
             }
+
+
         }
     }
 
@@ -97,7 +103,7 @@ public class HangmanGame {
 
     private boolean isGuessed(String word) {
         for (String letter : word.split("")) {
-            if (!correctLetters.contains(letter)) {
+            if (!correctLetters.contains(letter) && !letter.equals(" ")) {
                 return false;
             }
         }
@@ -140,7 +146,6 @@ public class HangmanGame {
     private void resetGameStates() {
         remainingChances = totalChances;
         correctLetters.clear();
-        incorrectLetters.clear();
         attemptedLetters.clear();
         clean();
     }
