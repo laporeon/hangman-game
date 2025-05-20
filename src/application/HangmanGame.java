@@ -15,22 +15,22 @@ public class HangmanGame {
             "REDIS"};
     private final int totalChances = 5;
     private int remainingChances = 5;
-    private boolean exit = false;
+    private boolean restart = true;
     private final List<String> incorrectLetters = new ArrayList<String>();
     private final List<String> correctLetters = new ArrayList<String>();
     private final List<String> attemptedLetters = new ArrayList<String>();
 
-    public void start() {
-        while (!exit) {
+    public void play() {
+        while (restart) {
             resetGameStates();
             String word = generateWord();
-            guessWord(word);
+            startGame(word);
 
-            restart();
+            playAgain();
         }
     }
 
-    private void guessWord(String word) {
+    private void startGame(String word) {
 
         while (remainingChances > 0 && !isGuessed(word)) {
             System.out.printf("\n%s%sGuess the word in %d chances:%s ", Colors.BOLD, Colors.BLUE,
@@ -41,7 +41,12 @@ public class HangmanGame {
                     Colors.RESET);
 
             System.out.print("\nChoose a letter: ");
-            String letter = scanner.nextLine().toUpperCase();
+            String letter = scanner.nextLine().toUpperCase().trim();
+
+            if (!isValidLetter(letter)) {
+                System.out.println("Please, enter a single valid letter.");
+                continue;
+            }
 
             if (isLetterAlreadyUsed(letter)) {
                 System.out.println("You already tried this letter.");
@@ -52,7 +57,8 @@ public class HangmanGame {
             attemptedLetters.add(letter);
 
             if (isGuessed(word)) {
-                System.out.printf("%s%s\nYOU WON!%s", Colors.BOLD, Colors.GREEN, Colors.RESET);
+                System.out.printf("%s%s\nYOU WON! The word was: %s%s", Colors.BOLD, Colors.GREEN,
+                        word, Colors.RESET);
                 return;
             }
         }
@@ -85,6 +91,10 @@ public class HangmanGame {
         }
     }
 
+    private boolean isValidLetter(String letter) {
+        return letter.length() == 1 && Character.isLetter(letter.charAt(0));
+    }
+
     private boolean isGuessed(String word) {
         for (String letter : word.split("")) {
             if (!correctLetters.contains(letter)) {
@@ -99,31 +109,25 @@ public class HangmanGame {
     }
 
 
-    public String generateWord() {
+    private String generateWord() {
         int randomNumber = (int) (Math.random() * words.length);
         String word = words[randomNumber];
         return word;
     }
 
-    public void clean() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-    }
+    private void playAgain() {
 
-    public void restart() {
-
-        while (!exit) {
+        while (true) {
             System.out.print("\n\nPress 1 to play again or 0 to quit: ");
             int option = scanner.nextInt();
             scanner.nextLine();
 
             switch (option) {
                 case 1:
-                    start();
+                    play();
                     break;
                 case 0:
                     exit();
-                    exit = true;
                     break;
                 default:
                     System.out.print("Invalid option. Try again... ");
@@ -141,9 +145,14 @@ public class HangmanGame {
         clean();
     }
 
+    private void clean() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
 
     public void exit() {
         System.out.println("Exiting...");
         System.out.flush();
+        System.exit(0);
     }
 }
