@@ -1,0 +1,149 @@
+package application;
+
+import enums.Colors;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class HangmanGame {
+
+    Scanner scanner = new Scanner(System.in);
+
+    private String[] words = {"HTML", "CSS", "JAVASCRIPT", "JAVA", "PYTHON", "RUST", "REACT",
+            "NODE", "TYPESCRIPT", "SQL", "POSTGRESQL", "MYSQL", "MONGODB", "NOSQL", "DOCKER",
+            "REDIS"};
+    private final int totalChances = 5;
+    private int remainingChances = 5;
+    private boolean exit = false;
+    private final List<String> incorrectLetters = new ArrayList<String>();
+    private final List<String> correctLetters = new ArrayList<String>();
+    private final List<String> attemptedLetters = new ArrayList<String>();
+
+    public void start() {
+        while (!exit) {
+            resetGameStates();
+            String word = generateWord();
+            guessWord(word);
+
+            restart();
+        }
+    }
+
+    private void guessWord(String word) {
+
+        while (remainingChances > 0 && !isGuessed(word)) {
+            System.out.printf("\n%s%sGuess the word in %d chances:%s ", Colors.BOLD, Colors.BLUE,
+                    totalChances, Colors.RESET);
+            updateWordState(word);
+
+            System.out.printf("\n%sAttempted letters: %s%s", Colors.GRAY, attemptedLetters,
+                    Colors.RESET);
+
+            System.out.print("\nChoose a letter: ");
+            String letter = scanner.nextLine().toUpperCase();
+
+            if (isLetterAlreadyUsed(letter)) {
+                System.out.println("You already tried this letter.");
+                continue;
+            }
+
+            checkIfWordHasLetter(word, letter);
+            attemptedLetters.add(letter);
+
+            if (isGuessed(word)) {
+                System.out.printf("%s%s\nYOU WON!%s", Colors.BOLD, Colors.GREEN, Colors.RESET);
+                return;
+            }
+        }
+
+        if (!isGuessed(word)) {
+            System.out.printf("%s%s\nYOU LOST! The word was: %s%s",
+                    Colors.BOLD, Colors.RED, word, Colors.RESET);
+        }
+    }
+
+    private void checkIfWordHasLetter(String word, String letter) {
+        if (word.contains(letter)) {
+            correctLetters.add(letter);
+            System.out.println("Correct!");
+        } else {
+            incorrectLetters.add(letter);
+            remainingChances--;
+            System.out.printf("%sIncorrect! You have %d chance(s) left.%s\n",
+                    Colors.RED, remainingChances, Colors.RESET);
+        }
+    }
+
+    private void updateWordState(String word) {
+        for (String letter : word.split("")) {
+            if (correctLetters.contains(letter)) {
+                System.out.print(letter + " ");
+            } else {
+                System.out.print("_ ");
+            }
+        }
+    }
+
+    private boolean isGuessed(String word) {
+        for (String letter : word.split("")) {
+            if (!correctLetters.contains(letter)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isLetterAlreadyUsed(String letter) {
+        return attemptedLetters.contains(letter);
+    }
+
+
+    public String generateWord() {
+        int randomNumber = (int) (Math.random() * words.length);
+        String word = words[randomNumber];
+        return word;
+    }
+
+    public void clean() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
+    public void restart() {
+
+        while (!exit) {
+            System.out.print("\n\nPress 1 to play again or 0 to quit: ");
+            int option = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (option) {
+                case 1:
+                    start();
+                    break;
+                case 0:
+                    exit();
+                    exit = true;
+                    break;
+                default:
+                    System.out.print("Invalid option. Try again... ");
+                    break;
+            }
+
+        }
+    }
+
+    private void resetGameStates() {
+        remainingChances = totalChances;
+        correctLetters.clear();
+        incorrectLetters.clear();
+        attemptedLetters.clear();
+        clean();
+    }
+
+
+    public void exit() {
+        System.out.println("Exiting...");
+        System.out.flush();
+    }
+}
