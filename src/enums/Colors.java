@@ -2,7 +2,7 @@ package enums;
 
 public enum Colors {
     BOLD("\u001B[1m"),
-    STRIKETHROUGH("\u001B[9m"),
+    UNDERLINE("\u001B[4m"),
     RED("\u001B[31m"),
     GREEN("\u001B[32m"),
     YELLOW("\u001B[33m"),
