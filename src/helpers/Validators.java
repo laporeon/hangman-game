@@ -14,4 +14,13 @@ public class Validators {
     public boolean checkIfWordHasLetter(String word, String letter) {
         return word.contains(letter);
     }
+
+    public boolean isGuessed(String word, List<String> correctLetters) {
+        for (String letter : word.split("")) {
+            if (!correctLetters.contains(letter) && !letter.equals(" ")) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
