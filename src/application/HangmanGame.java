@@ -75,7 +75,8 @@ public class HangmanGame {
         }
 
 
-        System.out.printf("%s%s\nYOU LOST! The word was: %s%s", Colors.BOLD, Colors.RED, word, Colors.RESET);
+        System.out.printf("%s%s\nYOU LOST! The word was: %s%s", Colors.BOLD, Colors.RED, word,
+                Colors.RESET);
 
     }
 
