@@ -32,7 +32,7 @@ public class HangmanGame {
 
         String word = words.generateWord();
 
-        while (remainingChances > 0 && !isGuessed(word)) {
+        while (remainingChances > 0 && !validators.isGuessed(word, correctLetters)) {
             System.out.printf("\n%s%sGuess the word in %d chances:%s ", Colors.BOLD, Colors.BLUE,
                     totalChances, Colors.RESET);
             words.updateWordState(word, correctLetters);
@@ -56,6 +56,8 @@ public class HangmanGame {
                 continue;
             }
 
+            attemptedLetters.add(letter);
+
             if (!validators.checkIfWordHasLetter(word, letter)) {
                 remainingChances--;
                 System.out.printf("%sIncorrect!%s\n", Colors.RED, Colors.RESET);
@@ -63,30 +65,18 @@ public class HangmanGame {
             }
 
             correctLetters.add(letter);
-            attemptedLetters.add(letter);
             System.out.println("Correct!");
 
-            if (isGuessed(word)) {
+            if (validators.isGuessed(word, correctLetters)) {
                 System.out.printf("%s%s\nYOU WON! The word was: %s%s", Colors.BOLD, Colors.GREEN,
                         word, Colors.RESET);
                 return;
             }
         }
 
-        if (!isGuessed(word)) {
-            System.out.printf("%s%s\nYOU LOST! The word was: %s%s",
-                    Colors.BOLD, Colors.RED, word, Colors.RESET);
-        }
-    }
 
+        System.out.printf("%s%s\nYOU LOST! The word was: %s%s", Colors.BOLD, Colors.RED, word, Colors.RESET);
 
-    private boolean isGuessed(String word) {
-        for (String letter : word.split("")) {
-            if (!correctLetters.contains(letter) && !letter.equals(" ")) {
-                return false;
-            }
-        }
-        return true;
     }
 
 
