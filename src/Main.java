@@ -27,12 +27,11 @@ public class Main {
                     hangmanGame.play();
                     break;
                 case 0:
-                    hangmanGame.exit();
+                    System.out.println("Exiting...");
                     exit = true;
                     break;
                 default:
                     System.out.println("Invalid option. Try again...");
-                    System.out.flush();
                     break;
             }
         }
