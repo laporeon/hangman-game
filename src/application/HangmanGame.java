@@ -21,12 +21,13 @@ public class HangmanGame {
     private final List<String> attemptedLetters = new ArrayList<String>();
 
     public void play() {
-        while (restart) {
+        do {
             resetGameStates();
             startGame();
             playAgain();
-        }
+        } while (restart);
     }
+
 
     private void startGame() {
 
@@ -45,7 +46,7 @@ public class HangmanGame {
             String letter = scanner.nextLine().toUpperCase().trim();
 
             if (!validators.isValidLetter(letter)) {
-                System.out.printf("%sERROR: Please, enter a single valid letter.%s\n", Colors.RED,
+                System.out.printf("%sERROR: Please, enter a single letter.%s\n", Colors.RED,
                         Colors.RESET);
                 continue;
             }
@@ -73,33 +74,30 @@ public class HangmanGame {
                 return;
             }
         }
-
-
+        
         System.out.printf("%s%s\nYOU LOST! The word was: %s%s", Colors.BOLD, Colors.RED, word,
                 Colors.RESET);
 
     }
 
-
     private void playAgain() {
+        System.out.print("\n\nPress 1 to play again or 0 to quit: ");
+        int option = scanner.nextInt();
+        scanner.nextLine();
 
-        while (true) {
-            System.out.print("\n\nPress 1 to play again or 0 to quit: ");
-            int option = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (option) {
-                case 1:
-                    play();
-                    break;
-                case 0:
-                    exit();
-                    break;
-                default:
-                    System.out.print("Invalid option. Try again... ");
-                    break;
-            }
-
+        switch (option) {
+            case 1:
+                restart = true;
+                break;
+            case 0:
+                restart = false;
+                System.out.println("Thanks for playing!");
+                System.exit(0);
+                break;
+            default:
+                System.out.print("Invalid option. Try again... ");
+                playAgain();
+                break;
         }
     }
 
@@ -113,11 +111,5 @@ public class HangmanGame {
     private void clean() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
-    }
-
-    public void exit() {
-        System.out.println("Exiting...");
-        System.out.flush();
-        System.exit(0);
     }
 }
