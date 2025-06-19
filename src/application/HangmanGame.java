@@ -34,6 +34,9 @@ public class HangmanGame {
         String word = words.generateWord();
 
         while (remainingChances > 0 && !validators.isGuessed(word, correctLetters)) {
+            clean();
+            drawHangman();
+
             System.out.printf("\n%s%sGuess the word in %d chances:%s ", Colors.BOLD, Colors.BLUE,
                     totalChances, Colors.RESET);
             words.updateWordState(word, correctLetters);
@@ -74,7 +77,9 @@ public class HangmanGame {
                 return;
             }
         }
-        
+
+        clean();
+        drawHangman();
         System.out.printf("%s%s\nYOU LOST! The word was: %s%s", Colors.BOLD, Colors.RED, word,
                 Colors.RESET);
 
@@ -106,6 +111,56 @@ public class HangmanGame {
         correctLetters.clear();
         attemptedLetters.clear();
         clean();
+    }
+
+    private void drawHangman() {
+        String[] hangman = {
+                """
+            ┌─────┐
+            │     │
+            │     
+            │
+            │    
+         ───┴───""",
+                """
+            ┌─────┐
+            │     │
+            │     O
+            │
+            │    
+         ───┴───""",
+                """
+            ┌─────┐
+            │     │
+            │     O
+            │     │
+            │    
+         ───┴───""",
+                """
+            ┌─────┐
+            │     │
+            │     O
+            │     │\\
+            │    
+         ───┴───""",
+                """
+            ┌─────┐
+            │     │
+            │     O
+            │    /│\\
+            │    
+         ───┴───""",
+                """
+            ┌─────┐
+            │     │
+            │     O
+            │    /│\\
+            │    / \\
+         ───┴───"""
+        };
+
+        int index = totalChances - remainingChances;
+        System.out.println(hangman[index]);
     }
 
     private void clean() {
