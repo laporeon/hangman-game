@@ -45,7 +45,7 @@ Then follow on-screen instructions.
 
 ## Preview
 
-![HangmanGame](./src/media/HangmanGame.gif)
+![HangmanGame](./media/HangmanGame.gif)
 
 
 [⬆ Back to the top](#--hangman-game)
